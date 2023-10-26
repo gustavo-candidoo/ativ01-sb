@@ -1,7 +1,11 @@
-CREATE TABLE product
-(
-    id character varying(40) NOT NULL,
-    name character varying(100) NOT NULL,
-    price numeric DEFAULT 0,
-    CONSTRAINT product_pkey PRIMARY KEY (id)
+CREATE DATABASE IF NOT EXISTS customer DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_0900_ai_ci;
+USE customer;
+
+CREATE TABLE client(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    cpf VARCHAR(11) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    hashpassword VARCHAR(64) NOT NULL
 );

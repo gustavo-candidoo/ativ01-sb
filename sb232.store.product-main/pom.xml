@@ -46,7 +46,13 @@
 			<version>8.1.0</version>
 		</dependency>
 
-	</dependencies>
+	
+   <dependency>
+     <groupId>commons-codec</groupId>
+     <artifactId>commons-codec</artifactId>
+     <version>1.13</version>
+   </dependency>
+ </dependencies>
 
 	<build>
 		<plugins>

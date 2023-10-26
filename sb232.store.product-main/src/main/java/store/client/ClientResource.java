@@ -1,4 +1,4 @@
-package store.product;
+package store.client;
 
 import java.util.List;
 
@@ -15,34 +15,34 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class ProductResource {
+public class ClientResource {
 
     @Autowired
-    private ProductService productService;
+    private ClientService clientService;
 
-    @GetMapping("/product")
-    public List<ProductOut> list() {
-        return productService.list().stream().map(ProductParser::to).toList();
+    @GetMapping("/client")
+    public List<ClientOut> list() {
+        return clientService.list().stream().map(ClientParser::to).toList();
     }
 
-    @GetMapping("/product/{id}")
-    public ProductOut get(@PathVariable(required = true) String id) {
-        Product found = productService.find(id);
-        return found == null ? null : ProductParser.to(found);
+    @GetMapping("/client/{id}")
+    public ClientOut get(@PathVariable(required = true) String id) {
+        Client found = clientService.find(id);
+        return found == null ? null : ClientParser.to(found);
     }
 
-    @DeleteMapping("/product/{id}")
+    @DeleteMapping("/client/{id}")
     public void delete(@PathVariable(required = true) String id) {
-        productService.delete(id);
+        clientService.delete(id);
     }
 
-    @PostMapping("/product")
-    public ResponseEntity<Object> create(@RequestBody ProductIn in) {
+    @PostMapping("/client")
+    public ResponseEntity<Object> create(@RequestBody ClientIn in) {
         return ResponseEntity.created(
                     ServletUriComponentsBuilder
                         .fromCurrentRequest()
                         .path("/{id}")
-                        .buildAndExpand(productService.create(ProductParser.to(in)).id())
+                        .buildAndExpand(clientService.create(ClientParser.to(in)).id())
                         .toUri())
                     .build();
     }
