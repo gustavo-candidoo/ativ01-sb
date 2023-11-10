@@ -4,14 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -37,14 +30,28 @@ public class ClientResource {
     }
 
     @PostMapping("/client")
-    public ResponseEntity<Object> create(@RequestBody ClientIn in) {
-        return ResponseEntity.created(
-                    ServletUriComponentsBuilder
-                        .fromCurrentRequest()
-                        .path("/{id}")
-                        .buildAndExpand(clientService.create(ClientParser.to(in)).id())
-                        .toUri())
-                    .build();
+    public void create(@RequestBody ClientIn in) {
+        clientService.create(ClientParser.to(in));
+
     }
 
-}
+    @PutMapping("/client/{id}")
+    public void update(@PathVariable(required = true) String id, @RequestBody ClientIn in) {
+        Client old = clientService.find(id);
+        Client novo = ClientParser.to(in);
+        if (old != null) {
+
+            old.name(novo.name())
+                    .cpf(novo.cpf())
+                    .email(novo.email())
+                    .password(novo.password());
+
+            clientService.update(old);
+        } else {
+            ResponseEntity.notFound().build();
+        }
+
+
+}}
+
+

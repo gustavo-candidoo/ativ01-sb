@@ -52,4 +52,7 @@ public class ClientModel {
             .build();
     }
 
+    public void setId(String id2) {
+    }
+
 }

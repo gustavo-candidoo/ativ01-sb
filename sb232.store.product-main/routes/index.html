@@ -33,7 +33,7 @@
         .btn {
             margin-top: 1rem;
         }
-        .b utton{
+        .button{
             color: aqua;
         }
     </style>
@@ -75,26 +75,110 @@
 
                 </div>
 
-                <div>
-
-                <a> Insira sua data de nascimento:</a>
-
-                <input type="date" class="form-control col-md-3" id="data" name="data" />
 
             </div>
 
+            <button type="button" class="btn btn-primary" id="client_create" onclick="enviarDados()">Cadastrar</button>
+
+            <button type="button" class="btn btn-warning" id="client_update" onclick="carregarDados()">Atualizar</button>
+
+        </div>
+
+        <div class="container-fluid">
+            <div id="divClients">
+
             </div>
-
-            <button type="button" class="btn btn-primary" id="client_create">Cadastrar</button>
-
-            <button type="button" class="btn btn-danger" id="client_delete">Excluir</button>
-
-            <button type="button" class="btn btn-warning" id="client_update">Atualizar</button>
-
         </div>
 
     </div>
 
 </body>
 
-</html>
+<script>
+    function enviarDados() {
+        var clienteNome = document.getElementById("cliente_nome").value;
+        var cpf = document.getElementById("cpf").value;
+        var email = document.getElementById("email").value;
+        var senha = document.getElementById("senha").value;
+
+        var data = {
+            name: clienteNome,
+            cpf: cpf,
+            email: email,
+            password: senha,
+            'name': clienteNome,
+            'cpf': cpf,
+            'email': email,
+            'password': senha,
+        };
+
+        fetch('http://localhost:8080/client', {
+            method: 'POST',
+            dataType: 'json',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('resultado').innerText = data;
+        });
+    }
+
+    async function carregarDados() {
+        let response = await fetch('http://localhost:8080/client')
+        let lista = await response.json()
+
+        let html = ""
+
+        let cores = ["bg-primary"]
+
+        let cores_texto = ["text-white"]
+
+        for (let i = 0; i < lista.length;i++) {
+            let client = lista[i];
+            if(i % 3 === 0) {
+                html += '<div class = "row">'
+            }
+
+            let cor = cores[i % cores.length]
+            let texto = cores_texto[i % cores_texto.length]
+
+        html += `
+        <div class="col-sm-12">
+            <div class="card ${texto} ${cor} mb-3">
+                <div class="card-header">${client.name}
+                    <div class="card-body">
+                        <h5 class="card-title">${client.id}</h5>
+                        <p class="card-text">${client.cpf}</p>
+                        <p class="card-text">${client.email}</p>
+                        <button type="button" class="btn btn-danger" id="client_delete" onclick="apagarDados()">Excluir</button>
+                        <button type="button" class="btn btn-danger" id="client_delete" onclick="apagarDados('${client.id}')">Excluir</button>
+                        <button type="button" class="btn btn-secondary" id="client_edit" onclick="editarDados()">Editar</button>
+                        </div>
+                </div>
+            </div>
+        `
+
+            if (i % 3 === 2 || i === lista.length - 1) {
+                html += '</div>'
+            }
+        }
+
+        let div = document.getElementById("divClients")
+        div.innerHTML = html
+        }
+
+        // ... Seu script anterior aqui
+
+        async function apagarDados(id) {
+            fetch('http://localhost:8080/client/' + id, {
+                method: 'DELETE',
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Faça algo com a resposta, se necessário
+                console.log(data);
+            });
+        }
